@@ -1,24 +1,34 @@
-import logo from './logo.svg';
+import Header from './Header';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 import './App.css';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
+import { UserProvider } from './firebase/UserProvider';
+import ProfileRedirect from './router/ProfileRedirect';
+import PrivateRoute from './router/PrivateRoute';
+
+import './firebase/config';
+import Profile from './pages/Profile';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserProvider>
+      <BrowserRouter>
+        <Header></Header>
+        <div className="app">
+          <div className="ui grid container">
+            <Switch>
+              <ProfileRedirect exact path="/signup" component={Signup} />
+              <PrivateRoute exact path="/profile/:id" component={Profile} />
+              <ProfileRedirect exact path="/login" component={Login} />
+              <Route exact path="/">
+                <Redirect to="/login"/>
+              </Route>
+            </Switch>
+          </div>
+        </div>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 
